@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Predkolokviumska Proba</title>
+    <link rel="stylesheet" href="jquery/jquery-ui.css">
+    <script src="jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.js"></script>
+    <style>
+        #first, #second{
+            display: inline-block;
+            border: #222222 solid 2px;
+            width: 250px;
+            text-align: center;
+        }
+        li{
+            list-style-type: none;
+        }
+        #omileni{
+            display: inline-block;
+            width: 250px;
+            border: #222222 solid 2px;
+            text-align: center;
+            padding-top: 44px;
+        }
+        #driverDetails{
+            display: inline-block;
+            width: 500px;
+            border: #222222 solid 2px;
+        }
+         li:nth-of-type(odd){
+            background: lightgray;
+        }
+    </style>
+</head>
+<body>
+<div id="first">
+    <h1>2016 Drivers:</h1>
+    <ul id="firstul">
+        <li value="2016" id="firstli"></li>
+    </ul>
+    <button id="firstListButton">Pull Data for Season 2016</button>
+</div>
+<div id="second">
+    <h1>2017 Drivers:</h1>
+    <ul id="secondul">
+        <li value="2017" id="secondli"></li>
+    </ul>
+    <button id="secondListButton">Pull Data for Season 2017</button>
+</div>
+<div id="omileni">
+    <h1>Favorite drivers: </h1>
+    <ul id="omileniul">
+    </ul>
+</div>
+<div id="driverDetails">
+    <ul id="driverdetslist">
+        <li id="permNumber"></li>
+        <li id="dateofbirth"></li>
+        <li id="nationality"></li>
+        <li id="driverbio"></li>
+        <button id="hidetray" type="button">Hide</button>
+    </ul>
+</div>
+
+
+<script>
+$(document).ready(function (){
+        $("#driverDetails").hide()
+        $("#firstListButton").click(function (){
+            getData($("#firstli").attr("value"))
+        })
+        $("#secondListButton").click(function (){
+            getData($("#secondli").attr("value"))
+        })
+        function getData(sezona){
+            $.ajax({
+                url: "http://ergast.com/api/f1/"+sezona+"/drivers.json",
+                dataType: "jsonp",
+                success: function (data){
+                    $.each(data.MRData.DriverTable.Drivers, function(i, item){
+                        var listItem = $("<li>")
+                        listItem.html(item.givenName+" "+item.familyName)
+                        listItem.attr("dateOfBirth", item.dateOfBirth)
+                        listItem.attr("nationality", item.nationality)
+                        listItem.attr("driverurl", item.url)
+                        listItem.attr("permanentnum", item.permanentNumber)
+                        if(sezona == "2016")
+                            listItem.appendTo("#first")
+                        if(sezona == "2017")
+                            listItem.appendTo("#second")
+                    })
+                }
+            })
+        }
+        $("#first").sortable({
+            connectWith: "#omileni"
+        })
+        $("#second").sortable({
+            connectWith: "#omileni"
+        })
+        $("#omileni").sortable({
+            receive: function (event, ui){
+                $transferedDriver = $(ui.item)
+            }
+        })
+        $(document).on("click", "#omileni li", function (){
+            $("#driverDetails").show()
+            var item = $(this)
+            $("#permNumber").text("Driver's Permanent Number: "+ item.attr("permanentnum"))
+            $("#dateofbirth").text("Driver's Date of Birth: "+ item.attr("dateOfBirth"))
+            $("#nationality").text("Driver's Nationality: "+ item.attr("nationality"))
+            $("#driverbio").text("Driver Biography URL: "+ item.attr("driverurl"))
+        })
+    $("#hidetray").click(function(){
+        $("#driverDetails").hide()
+    })
+})
+</script>
+</body>
+</html>

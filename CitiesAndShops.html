@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>201151 Dimitar Marenoski</title>
+    <link rel="stylesheet" href="jquery/jquery-ui.css">
+    <script src="jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.js"></script>
+    <style>
+    #listagr li{
+        list-style-type: none;
+    }
+    #glavniGradovi{
+        width: 250px;
+        display: inline-block;
+    }
+    li{
+        list-style-type: none;
+    }
+    #additionalInfo{
+        border: #222222 solid 2px;
+        width: 600px;
+    }
+    #glavniGradovi{
+        border: #222222 solid 2px;
+        margin-bottom: 20px;
+    }
+    #favoriteShops{
+        border: #222222 solid 2px;
+        width: 400px;
+        height: 250px;
+    }
+    #expandable{
+        border: #222222 solid 2px;
+    }
+    </style>
+</head>
+<body>
+<div id="glavniGradovi">
+    <ul id="listagr">
+        <li value="sk442">Скопје</li>
+        <li value="bg3164">Београд</li>
+        <li value="zg73">Загреб</li>
+        <li value="sr49316">Сараево</li>
+        <li value="lj431">Љубљана</li>
+        <li value="ti1212">Титоград</li>
+    </ul>
+</div>
+<div id="additionalInfo">
+
+</div>
+<div id="expandable">
+    <ul>
+        <li id="ophr"></li>
+        <li id="adr"></li>
+        <li id="descr"></li>
+    </ul>
+</div>
+<div id="favoriteShops">
+    <h3>Your selected favourite shops: </h3>
+</div>
+
+<script>
+$(document).ready(function (){
+    $("#additionalInfo").hide()
+    $("#expandable").hide()
+    $(document).on("click","#listagr li", function (){
+        let selectedCity = $(this).attr("value")
+        getData(selectedCity)
+        function getData(city){
+            $.ajax({
+                url: "https://"+city+".herokuapp.com/store_data",
+                dataType: "json",
+                success: function (data){
+                    $.each(data.objects.stores, function(i, item){
+                        let li = $("<li>")
+                        li.html("Shop name: "+item.storeName+" "+"Region: "+item.region)
+                        li.appendTo("#additionalInfo")
+                        $("#additionalInfo").show()
+                        $("#expandable").hide()
+                        $(document).on("click","#additionalInfo li", function (){
+                            let openhr = item.openHours
+                            let adres = item.address
+                            let desc = item.description
+                            let listItem = $("<li>")
+                            listItem.html(openhr + adres + desc+"<hr>")
+                            listItem.appendTo("#expandable")
+                            $("#expandable").show()
+                        })
+                    })
+                }
+            })
+        }
+    })
+    $("#additionalInfo").sortable({
+        connectWith: "#favoriteShops"
+    })
+    $("#favoriteShops").sortable({
+        receive: function (event, ui){
+            $transferedShop = $(ui.item)
+        }
+    })
+})
+</script>
+</body>
+</html>

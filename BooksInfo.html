@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ISBN Books</title>
+    <link rel="stylesheet" href="jquery/jquery-ui.css">
+    <script src="jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.js"></script>
+    <style>
+        li{
+            list-style-type: none;
+        }
+        #tobeDisplayed{
+            width: 500px;
+            display: inline-block;
+            border: #222222 dotted 5px;
+            padding: 10px;
+        }
+        #inputForm{
+            display: inline-block;
+            border: #222222 dotted 5px;
+            padding: 10px;
+        }
+        #additionalInfo{
+            border: #222222 solid 2px;
+            padding: 10px;
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+<div id="inputForm">
+    <label>ISBN:</label>
+    <input type="text" id="inputedIsbn">
+    <label>10 ili 13 cifren broj</label><br><br>
+    <button type="button" id="request">Add Book</button>
+</div>
+<div id="tobeDisplayed">
+
+</div>
+<div id="additionalInfo">
+    <button id="hidetray">Hide</button>
+    <ul>
+        <li>Facebook</li>
+        <li>Instagram</li>
+        <li>Twitter</li>
+        <li>Linkedin</li>
+    </ul>
+</div>
+
+
+
+
+
+<script>
+    let temp;
+    $("#tobeDisplayed").hide()
+    $("#additionalInfo").hide()
+    $(document).ready(function(){
+        $("#request").click(function(){
+            getData($("#inputedIsbn").val())
+        })
+        function getData(isbn){
+            $.ajax({
+                url: "https://openlibrary.org/api/books?bibkeys=ISBN:"+isbn+"&jscmd=details&callback=mycallback",
+                dataType: "jsonp",
+                success: function (data){
+                    temp = data;
+                    let wantedBook = data["ISBN:"+isbn+""]
+                    let infourl = wantedBook.info_url
+                    let title = wantedBook.details.title
+                    let thumbnailUrl = wantedBook.thumbnail_url
+                    let publishers = wantedBook.publishers
+                    let isbn13 = wantedBook.details.isbn_13
+                    //to be appended
+                    let listItem = $("<li>")
+                    listItem.html(title)
+                    listItem.appendTo("#tobeDisplayed")
+                    $("#tobeDisplayed").show()
+
+                   $(document).on("click","#tobeDisplayed li",function (){
+                       $("#tobeDisplayed").html("")
+                       $("#additionalInfo").show()
+                       let wantedURL = $("<li>")
+                       wantedURL.html(infourl)
+                       let thumbUrl = $("<img>")
+                       thumbUrl.attr("src", thumbnailUrl)
+                       let wantedPublishers = $("<li>")
+                       wantedPublishers.html(publishers)
+                       let wantedIsbn13 = $("<li>")
+                       wantedIsbn13.html(isbn13)
+                       console.log(isbn13)
+                       wantedURL.appendTo("#additionalInfo")
+                       thumbUrl.appendTo("#additionalInfo")
+                       wantedPublishers.appendTo("#additionalInfo")
+                       wantedIsbn13.appendTo("#additionalInfo")
+                   })
+                    $("#hidetray").click(function (){
+                        $("#additionalInfo").hide()
+                    })
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>
