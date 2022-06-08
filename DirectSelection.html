@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <title>Hello, world!</title>
+  <link rel="stylesheet" href="jquery/jquery-ui.css">
+  <script src="jquery/jquery.js"></script>
+  <script src="jquery/jquery-ui.js"></script>
+  <script src="script.js"></script>
+</head>
+<style>
+</style>
+<body>
+<button id="delete">Delete</button>
+<button id="restore">Restore</button>
+<table>
+  <tr id="1"><td><input type="checkbox" value="1"></td><td>Sender
+    name...1</td><td>Subject...</td></tr>
+  <tr id="2"><td><input type="checkbox" value="2"></td><td>Sender
+    name...2</td><td>Subject...</td></tr>
+  <tr id="3"><td><input type="checkbox" value="3"></td><td>Sender
+    name...3</td><td>Subject...</td></tr>
+  <tr id="4"><td><input type="checkbox" value="4"></td><td>Sender
+    name...4</td><td>Subject...</td></tr>
+  <tr id="5"><td><input type="checkbox" value="5"></td><td>Sender
+    name...5</td><td>Subject...</td></tr>
+  <tr id="6"><td><input type="checkbox" value="6"></td><td>Sender
+    name...6</td><td>Subject...</td></tr>
+  <tr id="7"><td><input type="checkbox" value="7"></td><td>Sender
+    name...7</td><td>Subject...</td></tr>
+</table>
+
+<script>
+  $(document).ready(function() {
+    $("input[type=checkbox]").click(function () {
+      console.log("Clicked")
+      if($(this).prop("checked")){
+        $("#"+$(this).attr("value")).addClass("selected")
+      }else{
+        $("#"+$(this).attr("value")).removeClass("selected")
+      }
+    })
+    $("#delete").click(function () {
+      $(".selected").hide()
+    })
+    $("#restore").click(function () {
+      $(".selected").show()
+    })
+  });
+  </script>
+</body>
+</html>
