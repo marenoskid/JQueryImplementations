@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <title>Hello, world!</title>
+    <link rel="stylesheet" href="jquery/jquery-ui.css">
+    <script src="jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.js"></script>
+    <script src="script.js"></script>
+</head>
+<style>
+    ul{
+        display: inline-block;
+        width: 250px;
+        list-style-type: none;
+        cursor: pointer;
+        vertical-align: top;
+    }
+    li{
+        border: 1px solid gainsboro;
+        margin-bottom: 5px;
+        padding: 5px;
+    }
+    .ui-selected{
+        background: #e78f08;
+    }
+</style>
+<body>
+<ul id="source" class="selectable">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+    <li>Item 4</li>
+    <li>Item 5</li>
+    <li>Item 6</li>
+    <li>Item 7</li>
+</ul>
+<button id="add">></button>
+<button id="remove"><</button>
+<ul id="dest" class="selectable">
+    <li>Item 8</li>
+</ul>
+<script>
+    $(document).ready(function() {
+        $(".selectable").selectable();
+        $("#add").click(function () {
+            $("#source").find(".ui-selected").appendTo("#dest").removeClass("ui-selected")
+        })
+        $("#remove").click(function () {
+            $("#dest").find(".ui-selected").appendTo("#source").removeClass("ui-selected")
+        })
+    });
+</script>
+</body>
+</html>

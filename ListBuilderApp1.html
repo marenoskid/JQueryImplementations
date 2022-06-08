@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="jquery/jquery-ui.css">
+    <script src="jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.js"></script>
+    <script src="script.js"></script>
+    <style>
+        .card{
+            display: inline-block;
+            width: 200px;
+            vertical-align: top;
+            padding: 20px;
+        }
+        .card:first-of-type{
+            border-right: 1px solid darkgray;
+        }
+        li{
+            cursor: pointer;
+        }
+        li:nth-child(odd){
+            background: lightgrey;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <p>Enrolled students</p>
+    <ul id="enrolled_students">
+        <li>Nikola Nikolov 111111</li>
+        <li>Jovan Nikolov 111112</li>
+        <li>Bojan Nikolov 111113</li>
+        <li>Marko Nikolov 111114</li>
+    </ul>
+    <button id="add">Add new student</button>
+</div>
+<div class="card">
+    <p>Test students</p>
+    <ul id="test_students">
+        <li title="80">Nikola Nikolov 111117</li>
+        <li title="22">Jovan Nikolov 111118</li>
+    </ul>
+</div>
+<div id="new_student">
+    <p>Insert student name</p>
+    <input type="text" id="student_name">
+    <p>Insert student ID</p>
+    <input type="text" id="student_id">
+</div>
+<div id="dialog_points">
+    <p>Insert student points</p>
+    <input type="text" id="student_points">
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#new_student").dialog({
+            autoOpen:false,
+            modal:true,
+            buttons:{
+                Add: function () {
+                    var student_name = $("#student_name").val()
+                    var student_id = $("#student_id").val()
+                    $("#enrolled_students").append("<li>"+student_name+" "+student_id+"</li>")
+                    $("#new_student").dialog("close")
+                }
+            }
+        })
+        $("#dialog_points").dialog({
+            autoOpen:false,
+            modal:true,
+            buttons:{
+                Add: function () {
+                    var points = $("#student_points").val()
+                    $transfered_student.attr("title", points)
+                    $transfered_student.tooltip()
+                    $("#dialog_points").dialog("close")
+                }
+            }
+        })
+        $("#add").click(function () {
+            $("#new_student").dialog("open")
+        })
+        $("#enrolled_students").sortable({
+            connectWith: "#test_students"
+        })
+        $("#test_students").sortable({
+            receive: function( event, ui ) {
+                $transfered_student = $(ui.item)
+                $("#dialog_points").dialog("open")
+            }
+        })
+        $("#test_students li").tooltip()
+    })
+
+
+
+
+</script>
+</body>
+</html>
